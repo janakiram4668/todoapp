@@ -4,7 +4,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #2575fc;
+  background-color: #2b3037;
   color: white;
   padding: 10px 10px; /* Decrease the right padding to move content left */
   display: flex;
@@ -12,6 +12,7 @@
   align-items: center;
   z-index: 100;
   flex-wrap: wrap; 
+  margin-bottom: 100px;
 }
 .modal-backdrop {
   position: fixed;
@@ -24,6 +25,7 @@
   justify-content: center;
   align-items: center;
   z-index: 200;
+  
 }
 
 /* Header Controls (Filter and Add Task Button) */
@@ -32,12 +34,14 @@
   justify-content: flex-start; /* Align both filter and add task buttons to the left */
   align-items: center;
   gap: 10px; /* Add some spacing between the buttons */
+   
 }
 
 .filter-select {
   padding: 5px;
-  margin-right: 15px;
-  margin-left: 15px;
+  margin-right: 8px;
+  margin-left: 10px;
+  flex-wrap: wrap; 
 }
 
 .add-task-btn {
@@ -47,6 +51,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  
 }
 
 .add-task-btn:hover {
@@ -175,4 +180,51 @@ form.add-task-form button[type="button"]:hover {
 
 .task-item p {
   margin: 5px 0;
+}
+
+/* General styles for all buttons in the task manager */
+.task-item .btn {
+  padding: 5px 10px; /* Reduced padding */
+  font-size: 12px;   /* Smaller font size */
+  margin: 5px 3px;   /* Adjusted spacing between buttons */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Specific styles for each button type */
+.task-item .completed-btn {
+  background-color: #d4edda;
+  color: #155724;
+  
+  
+}
+
+.task-item .edit-btn {
+  background-color: #d4edda;
+  color: #856404;
+}
+
+.task-item .delete-btn {
+  background-color: #d4edda;
+  color: #721c24;
+}
+
+/* Hover effects for better user experience */
+.task-item .btn:hover {
+  opacity: 0.9;
+}
+
+.task-item .completed-btn:hover {
+  background-color: #e60e0e;
+  color: white;
+}
+.task-item .delete-btn:hover {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
+.task-item .edit-btn:hover {
+  background-color: #ff0000;
+  color: #ffffff;
 }

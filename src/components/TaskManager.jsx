@@ -6,6 +6,7 @@ const TaskManager = () => {
   const [filter, setFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
   const [showAddTask, setShowAddTask] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
 
   // On initial render, load tasks from localStorage
   useEffect(() => {
@@ -45,6 +46,13 @@ const TaskManager = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
+  const handleEditTask = (id, updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === id ? updatedTask : task))
+    );
+    setEditingTask(null);
+  };
+
   // Filter tasks based on completion and priority
   const filteredTasks = tasks.filter((task) => {
     if (filter === 'Completed' && !task.completed) return false;
@@ -56,7 +64,7 @@ const TaskManager = () => {
   return (
     <div>
       <header className="task-manager-header">
-        <h1>Task Manager    </h1>
+        <h1>Task Manager</h1>
         <div className="header-controls">
           <select
             value={filter}
@@ -99,10 +107,24 @@ const TaskManager = () => {
               <p>{task.description}</p>
               <p>Due: {task.dueDate || 'No due date'}</p>
               <p>Priority: {task.priority || 'No priority'}</p>
-              <button onClick={() => toggleComplete(task.id)}>
+              <button 
+                onClick={() => toggleComplete(task.id)} 
+                className="btn completed-btn"
+              >
                 {task.completed ? 'Mark as Pending' : 'Mark as Complete'}
               </button>
-              <button onClick={() => deleteTask(task.id)}>Delete</button>
+              <button 
+                onClick={() => setEditingTask(task)} 
+                className="btn edit-btn"
+              >
+                Edit
+              </button>
+              <button 
+                onClick={() => deleteTask(task.id)} 
+                className="btn delete-btn"
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>
@@ -113,6 +135,19 @@ const TaskManager = () => {
           <div className="modal-card">
             <h2>Add Task</h2>
             <AddTaskForm onAddTask={handleAddTask} onClose={() => setShowAddTask(false)} />
+          </div>
+        </div>
+      )}
+
+      {editingTask && (
+        <div className="modal-backdrop">
+          <div className="modal-card">
+            <h2>Edit Task</h2>
+            <EditTaskForm
+              task={editingTask}
+              onEditTask={handleEditTask}
+              onClose={() => setEditingTask(null)}
+            />
           </div>
         </div>
       )}
@@ -180,6 +215,69 @@ const AddTaskForm = ({ onAddTask, onClose }) => {
         </select>
       </div>
       <button type="submit">Add Task</button>
+      <button type="button" onClick={onClose}>
+        Cancel
+      </button>
+    </form>
+  );
+};
+
+const EditTaskForm = ({ task, onEditTask, onClose }) => {
+  const [title, setTitle] = useState(task.title);
+  const [description, setDescription] = useState(task.description);
+  const [dueDate, setDueDate] = useState(task.dueDate);
+  const [priority, setPriority] = useState(task.priority);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onEditTask(task.id, {
+      ...task,
+      title,
+      description,
+      dueDate,
+      priority,
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="edit-task-form">
+      <div>
+        <label>Title:</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Description:</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Due Date:</label>
+        <input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Priority:</label>
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+        >
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      <button type="submit">Save Changes</button>
       <button type="button" onClick={onClose}>
         Cancel
       </button>
